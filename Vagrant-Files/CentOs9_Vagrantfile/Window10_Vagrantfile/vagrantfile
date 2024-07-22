@@ -1,0 +1,25 @@
+# Vagrantfile
+
+Vagrant.configure("2") do |config|
+    # Use a Windows 10 box
+    config.vm.box = "StefanScherer/windows_10"
+  
+    # Set up network configuration
+    config.vm.network "public_network"
+  
+    # Configure the amount of memory and number of CPUs for the VM
+    config.vm.provider "virtualbox" do |vb|
+      vb.memory = "2048"
+      vb.cpus = 2
+    end
+  
+    # Provisioning with a simple shell script
+    config.vm.provision "shell", inline: <<-SHELL
+      # Install Chocolatey (a package manager for Windows)
+      Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+  
+      # Install Git using Chocolatey
+      choco install git -y
+    SHELL
+  end
+  
